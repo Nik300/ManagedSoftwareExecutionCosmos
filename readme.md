@@ -11,11 +11,11 @@ Let's proceed in order:
 just add the namespace **ManagedSoftwareImplementation.SoftwareExecution** in your code and you should be really good to go.
 ### Grab an executable
 To be honest, there's no much choice, just go for ***test.o*** in **test_resources/**.
-###Implement the needed syscalls
+### Implement the needed syscalls
 test.o needs two key system calls that you can create yourself actually. One is used to write to the screen the character contained into the register EAX(which is 8bit-only by now).
 Take a look at ***Kernel.cs***, function **SysCallPrint** and **SysCallPrintLN**.
 Once implemented these two functions in your kernel, you have to tell the executable to use them, but first we need the instance of the executable.
-### Load an executable
+### Load the executable
 To do that just create a variable with type **Software**, that I'll call *test_exec* for test purposes.
 ```
 Software test_exec = new Software(resource_bytes);
@@ -40,7 +40,7 @@ Now let's start the task manager!
 ```
 testManager.StartExecution();
 ```
-##Important notes
+## Important notes
 please note that:
 - Once loaded the task manager, there's no way back to cosmos, if not handled by a system call
 - I've spent a lot of time doing this and I'd appreciate a feedback of yours, about what you think must be changed and stuff like that, but please don't tell stuff like '32bit not supported' and stuff like that, because they'll come. Just be patient
