@@ -31,11 +31,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <None Remove="test_softwares_sources\test" />
+      <None Remove="test_softwares_sources\test.o" />
+      <None Remove="test_softwares_sources\thread_test.o" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Include="test_softwares_sources\test" />
+      <EmbeddedResource Include="test_softwares_sources\test.o" />
+      <EmbeddedResource Include="test_softwares_sources\thread_test.o" />
     </ItemGroup>
 
     <ItemGroup>

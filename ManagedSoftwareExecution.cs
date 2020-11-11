@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
-using IL2CPU.API.Attribs;
 
 namespace ManagedSoftwareImplementation.SoftwareExecution
 {
@@ -27,52 +27,122 @@ namespace ManagedSoftwareImplementation.SoftwareExecution
         public byte EBP;
 
         public byte EFB;
+
+        public byte EIP;
+        public byte EDP;
     }
 
     class Software
     {
-        [ManifestResourceStream(ResourceName = "ManagedSoftwareImplementation.test_softwares_sources.test")] public static byte[] file;
+        public static byte[] file;
         private delegate void DEL(byte[] kArgs);
-        public delegate void SystemCallFunc();
+        public delegate void SystemCallFunc(Software sender);
         public SystemCallFunc[] syscalls = new SystemCallFunc[256];
         public readonly Dictionary<byte, Delegate> opcodes;
         public readonly Dictionary<byte, int> opcodesLen;
         public REGISTERS regs = new REGISTERS();
+        public bool run = true;
+        private bool last_command = true;
         private readonly byte execArch;
-        private readonly byte[] VRAM;
-        private readonly byte[] opcode;
-        private int opindex = 0;
+        public byte[] VRAM { get; protected private set; }
+        public readonly byte[] opcode;
 
+        private void NOP(byte[] kArgs)
+        {
+            return;
+        }
         private void MOV(byte[] kArgs)
         {
+            if (kArgs[1] == regs.EIP)
+            {
+                SetPointerData(0x00, regs.EEFLAG);
+                if (GetPointerData(regs.CR0) != 0x04)
+                {
+                    SetPointerData(0x01, regs.EEFLAG);
+                    return;
+                }
+            }
             SetPointerData(GetPointerData(kArgs[0]), kArgs[1]);
             SetPointerData(0, kArgs[0]);
         }
         private void SET(byte[] kArgs)
         {
+            if (kArgs[1] == regs.EIP)
+            {
+                SetPointerData(0x00, regs.EEFLAG);
+                if (GetPointerData(regs.CR0) != 0x04)
+                {
+                    SetPointerData(0x01, regs.EEFLAG);
+                    return;
+                }
+            }
             SetPointerData(GetPointerData(kArgs[0]), kArgs[1]);
         }
         private void SYSCALL(byte[] kArgs)
         {
             SystemCallFunc syscall = syscalls[kArgs[0]];
-            syscall();
+            syscall(this);
         }
         private void push(byte[] kArgs)
         {
             SetPointerData(GetPointerData(kArgs[0]), regs.EBP);
-            regs.EBP = (byte)(regs.EBP + 0x01);
-            SetPointerData(0, regs.EBP);
+            RefreshBasePointer((byte)(regs.EBP + 0x01));
         }
         private void pop(byte[] kArgs)
         {
             SetPointerData(GetPointerData((byte)(regs.EBP - 0x01)), kArgs[0]);
-            regs.EBP = (byte)(regs.EBP - 0x01);
-            SetPointerData(0, regs.EBP);
+            RefreshBasePointer((byte)(regs.EBP - 0x01));
         }
-
-        public Software()
+        private void jump(byte[] kArgs)
         {
-            //Console.WriteLine("Calling..");
+            SetPointerData(kArgs[0], regs.EIP);
+        }
+        private void call(byte[] kArgs)
+        {
+            SetPointerData((byte)(GetPointerData(regs.EIP)), regs.EDP);
+            jump(kArgs);
+        }
+        private void ret(byte[] kArgs)
+        {
+            SetPointerData(GetPointerData(regs.EDP), regs.EIP);
+            SetPointerData(0x00, regs.EDP);
+        }
+        public void end(byte[] kArgs)
+        {
+            run = false;
+        }
+        public void compare(byte[] kArgs)
+        {
+            if (GetPointerData(kArgs[0]) <= GetPointerData(kArgs[1])) last_command = false;
+            else last_command = true;
+        }
+        public void jumpif(byte[] kArgs)
+        {
+            if (last_command) jump(kArgs);
+        }
+        public void jumpifnot(byte[] kArgs)
+        {
+            if (!last_command) jump(kArgs);
+        }
+        public void add(byte[] kArgs)
+        {
+            SetPointerData((byte)(GetPointerData(kArgs[0]) + GetPointerData(kArgs[1])), kArgs[1]);
+        }
+        public void sub(byte[] kArgs)
+        {
+            SetPointerData((byte)(GetPointerData(kArgs[0]) - GetPointerData(kArgs[1])), kArgs[1]);
+        }
+        public void get(byte[] kArgs)
+        {
+            SetPointerData(GetPointerData(GetPointerData(kArgs[0])), kArgs[1]);
+        }
+        public void put(byte[] kArgs)
+        {
+            SetPointerData(GetPointerData(kArgs[0]), GetPointerData(kArgs[1]));
+        }
+        public Software(byte[] raw_code)
+        {
+            file = raw_code;
             //INIT ARCH type
             execArch = file[0];
 
@@ -106,8 +176,12 @@ namespace ManagedSoftwareImplementation.SoftwareExecution
             //INIT OPCODES
             Dictionary<byte, Delegate> ocodes = new Dictionary<byte, Delegate>();
             Dictionary<byte, int> ocodesLen = new Dictionary<byte, int>();
+            //NOP - 0x00
+            DEL del = new DEL(NOP);
+            ocodes.Add(0x00, del);
+            ocodesLen.Add(0x00, 0);
             //MOV - 0x01
-            DEL del = new DEL(MOV);
+            del = new DEL(MOV);
             ocodes.Add(0x01, del);
             ocodesLen.Add(0x01, 2);
             //SET - 0x02
@@ -118,15 +192,58 @@ namespace ManagedSoftwareImplementation.SoftwareExecution
             del = new DEL(SYSCALL);
             ocodes.Add(0x03, del);
             ocodesLen.Add(0x03, 1);
-            //PUSH - 0x04
+            //POP - 0x04
             del = new DEL(pop);
             ocodes.Add(0x04, del);
             ocodesLen.Add(0x04, 1);
-            //POP - 0x05
+            //PUSH - 0x05
             del = new DEL(push);
             ocodes.Add(0x05, del);
             ocodesLen.Add(0x05, 1);
-
+            //JUMP - 0x06
+            del = new DEL(jump);
+            ocodes.Add(0x06, del);
+            ocodesLen.Add(0x06, 1);
+            //CALL - 0x07
+            del = new DEL(call);
+            ocodes.Add(0x07, del);
+            ocodesLen.Add(0x07, 1);
+            //RET - 0x08
+            del = new DEL(ret);
+            ocodes.Add(0x08, del);
+            ocodesLen.Add(0x08, 0);
+            //END - 0x09
+            del = new DEL(end);
+            ocodes.Add(0x09, del);
+            ocodesLen.Add(0x09, 0);
+            //COMPARE - 0x0a
+            del = new DEL(compare);
+            ocodes.Add(0x0a, del);
+            ocodesLen.Add(0x0a, 2);
+            //JE - 0x0b
+            del = new DEL(jumpif);
+            ocodes.Add(0x0b, del);
+            ocodesLen.Add(0x0b, 1);
+            //ADD - 0x0c
+            del = new DEL(add);
+            ocodes.Add(0x0c, del);
+            ocodesLen.Add(0x0c, 2);
+            //SUB - 0x0d
+            del = new DEL(sub);
+            ocodes.Add(0x0d, del);
+            ocodesLen.Add(0x0d, 2);
+            //JNE - 0x0e
+            del = new DEL(jumpifnot);
+            ocodes.Add(0x0e, del);
+            ocodesLen.Add(0x0e, 2);
+            //GET - 0x0f
+            del = new DEL(get);
+            ocodes.Add(0x0f, del);
+            ocodesLen.Add(0x0f, 2);
+            //PUT - 0x10
+            del = new DEL(put);
+            ocodes.Add(0x10, del);
+            ocodesLen.Add(0x10, 2);
 
             opcodes = ocodes;
             opcodesLen = ocodesLen;
@@ -136,6 +253,9 @@ namespace ManagedSoftwareImplementation.SoftwareExecution
             _opcode = new List<byte>();
             ocodes = new Dictionary<byte, Delegate>();
             ocodesLen = new Dictionary<byte, int>();
+
+            //initialize stack by pushing a null argument
+            push(new byte[] { 0x00 });
         }
 
         public void AddSysCall(SystemCallFunc syscallfunc, int syscallnum)
@@ -161,33 +281,66 @@ namespace ManagedSoftwareImplementation.SoftwareExecution
             regs.CR3 = 0x0a;
             regs.CR4 = 0x0b;
 
-            regs.ESP = 0x0c;
-            regs.EBP = 0x0d;
+            regs.EFB = 0x0c;
 
-            regs.EFB = (byte)(regs.EBP + 1);
+            regs.ESP = 0x0d;
+            regs.EBP = 0x0e;
+
+            regs.EIP = (byte)(regs.EFB + 1);
+            regs.EDP = (byte)(regs.EIP + 1);
         }
 
         public Software(string path)
         {
+            file = System.IO.File.ReadAllBytes(path);
         }
 
         public void runNextInstr()
         {
-            byte ocode = getOPByte();
-            List<byte> kargs = new List<byte>();
-            for (int i = 1; i <= opcodesLen[ocode]; i++)
+            try
             {
-                byte a = getOPByte();
-                if (a == 0xFB)
+                if (!run) return;
+                byte ocode = getOPByte();
+                List<byte> kargs = new List<byte>();
+                for (int i = 1; i <= opcodesLen[ocode]; i++)
                 {
-                    SetPointerData(getOPByte(), regs.EFB);
-                    kargs.Add(regs.EFB);
+                    byte a = getOPByte();
+                    if (a == 0xFB)
+                    {
+                        SetPointerData(getOPByte(), regs.EFB);
+                        kargs.Add(regs.EFB);
+                    }
+                    else if (a == 0xFF)
+                    {
+                        byte point = GetPointerData(getOPByte());
+                        kargs.Add(point);
+                        Console.WriteLine($"pointer: {point}");
+                    }
+                    else
+                        kargs.Add(a);
                 }
-                else
-                    kargs.Add(a);
+                DEL del = (DEL)opcodes[ocode];
+                del(kargs.ToArray());
             }
-            DEL del = (DEL)opcodes[ocode];
-            del(kargs.ToArray());
+            catch (Exception ex)
+            {
+                Panic(ex);
+            }
+        }
+
+        public void Panic(Exception ex)
+        {
+            Console.WriteLine($"This application committed an illegal action and has been shut down\nINFO: \"{ex.Message}\"");
+            run = false;
+            Console.WriteLine($"Beginning dump of Application's memory...");
+            if (!File.Exists("0:\\dump.dat"))
+                File.Create("0:\\dump.dat").Close();
+            File.WriteAllBytes("0:\\dump.dat", VRAM);
+            Console.WriteLine($"Dump complete! Clearing Application's memory and leaving RAM...");
+            for (int i = 0; i < VRAM.Length; i++)
+                VRAM[i] = 0x00;
+            VRAM = null;
+            Console.WriteLine($"Clear complete! Now leaving...");
         }
 
         public byte GetPointerData(byte pointer)
@@ -204,24 +357,28 @@ namespace ManagedSoftwareImplementation.SoftwareExecution
         {
             try
             {
-                byte res = opcode[opindex];
-                opindex += 1;
+                byte res = opcode[GetPointerData(regs.EIP)];
+                SetPointerData((byte)(GetPointerData(regs.EIP) + 0x01), regs.EIP);
                 return res;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine($"APPLICATION END UNEXPECTED: {e.Message}");
-                Console.WriteLine($"Last known address: 0x{opindex}/0x{opcode.Length}");
+                Panic(ex);
                 return 0x00;
             }
         }
 
-        private void refreshBasePointer(byte newPos)
+        private void RefreshBasePointer(byte newPos)
         {
-            SetPointerData(0x00, regs.EBP);
+            byte EIP = GetPointerData(regs.EIP);
+            byte EDP = GetPointerData(regs.EDP);
             SetPointerData(0x00, regs.EFB);
+            SetPointerData(0x00, regs.EDP);
             regs.EBP = newPos;
-            regs.EFB = (byte)(regs.EBP + 1);
+            regs.EIP = (byte)(regs.EBP + 1);
+            regs.EDP = (byte)(regs.EIP + 1);
+            SetPointerData(EIP, regs.EIP);
+            SetPointerData(EDP, regs.EDP);
         }
     }
 }
