@@ -11,7 +11,6 @@ namespace ManagedSoftwareImplementation
     public class Kernel : Sys.Kernel
     {
         [ManifestResourceStream(ResourceName = "ManagedSoftwareImplementation.test_softwares_sources.test.o")] public static byte[] file;
-        [ManifestResourceStream(ResourceName = "ManagedSoftwareImplementation.test_softwares_sources.thread_test.o")] public static byte[] file1;
 
         SoftwareExecution.Software software;
         
@@ -44,10 +43,6 @@ namespace ManagedSoftwareImplementation
             software.AddSysCall(SysCallClear, 2);
             TasksManager tasksManager = new TasksManager();
             tasksManager.Start(software);
-            software = new Software(file1);
-            software.AddSysCall(SysCallPrintLN, 0);
-            software.AddSysCall(SysCallPrint, 1);
-            software.AddSysCall(SysCallClear, 2);
             tasksManager.StartExecution();
             for (; ; );
         }
