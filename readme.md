@@ -1,6 +1,6 @@
 # ManagedSoftwareExecution (MSE)
 ## What the heck is that?
-Fair question! MSE is an algorithm made for CosmosOS that can execute a machine code designed from the ground up from me.
+Fair question! MSE is an algorithm made for CosmosOS that can execute a machine code designed from the ground up by me.
 By now, the MSE code only supports 8-bit iterators and registers, but will add support for 32-bit as well as 16-bit in future.
 Actually, I don't think this project will be of any help right now, because a key component is missing: the compiler.
 ## How do I run code on Cosmos then?
