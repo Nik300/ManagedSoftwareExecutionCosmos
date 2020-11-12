@@ -44,5 +44,6 @@ testManager.StartExecution();
 please note that:
 - Once loaded the task manager, there's no way back to cosmos, if not handled by a system call
 - I've spent a lot of time doing this and I'd appreciate a feedback of yours, about what you think must be changed and stuff like that, but please don't tell stuff like '32bit not supported' and stuff like that, because they'll come. Just be patient
+- If something goes wrong during the program execution, the MSE algorithm will automatically dump the program memory, storing it at 0:\dump.dat, which will be changed later on to a specific folder connected to that specific program
 
 That being said, enjoy your code!
