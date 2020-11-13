@@ -10,7 +10,7 @@ Let's proceed in order:
 ### Include the namespace
 just add the namespace **ManagedSoftwareImplementation.SoftwareExecution** in your code and you should be really good to go.
 ### Grab an executable
-To be honest, there's no much choice, just go for ***test.o*** in **test_resources/**.
+To be honest, there's no much choice, just go for ***test.o*** in **test_softwares_sources/**.
 ### Implement the needed syscalls
 test.o needs two key system calls that you can create yourself actually. One is used to write to the screen the character contained into the register EAX(which is 8bit-only by now).
 Take a look at ***Kernel.cs***, function **SysCallPrint** and **SysCallPrintLN**.
