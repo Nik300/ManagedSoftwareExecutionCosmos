@@ -41,6 +41,7 @@ namespace ManagedSoftwareImplementation.SoftwareExecution
         public readonly Dictionary<byte, Delegate> opcodes;
         public readonly Dictionary<byte, int> opcodesLen;
         public REGISTERS regs = new REGISTERS();
+        List<byte> returns = new List<byte>();
         public bool run = true;
         private bool last_command = true;
         private readonly byte execArch;
@@ -99,13 +100,14 @@ namespace ManagedSoftwareImplementation.SoftwareExecution
         }
         private void call(byte[] kArgs)
         {
-            SetPointerData((byte)(GetPointerData(regs.EIP)), regs.EDP);
+            returns.Add((byte)(GetPointerData(regs.EIP)));
             jump(kArgs);
         }
         private void ret(byte[] kArgs)
         {
-            SetPointerData(GetPointerData(regs.EDP), regs.EIP);
-            SetPointerData(0x00, regs.EDP);
+            byte toJump = returns[returns.ToArray().Length - 1];
+            returns.Remove(toJump);
+            jump(new byte[] { toJump });
         }
         public void end(byte[] kArgs)
         {

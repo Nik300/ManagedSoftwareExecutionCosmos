@@ -37,7 +37,7 @@ namespace ManagedSoftwareImplementation
 
         protected override void Run()
         {
-            Console.WriteLine("#####Managed Software Execution#####\n[Ver: Alpha 3.7, Build: 09112020_0950]\n##TEST PROGRAMS:\n");
+            Console.WriteLine("#####Managed Software Execution#####\n[Ver: Alpha 3.7-2, Build: 15112020_2146]\n##TEST PROGRAMS:\n");
             software.AddSysCall(SysCallPrintLN, 0);
             software.AddSysCall(SysCallPrint, 1);
             software.AddSysCall(SysCallClear, 2);
