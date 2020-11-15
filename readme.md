@@ -17,11 +17,11 @@ Take a look at ***Kernel.cs***, function **SysCallPrint** and **SysCallPrintLN**
 Once implemented these two functions in your kernel, you have to tell the executable to use them, but first we need the instance of the executable.
 ### Load the executable
 To do that just create a variable with type **Software**, that I'll call *test_exec* for test purposes.
-```
+```C#
 Software test_exec = new Software(resource_bytes);
 ```
 in which resource_bytes is:
-```
+```C#
 [ManifestResourceStream(ResourceName = "projectname.filepos")] static byte[] resource_bytes;
 ```
 ### Add the syscalls we implemented
@@ -29,15 +29,15 @@ To add the system calls that you implemented, just use the function ```test_exec
 Please keep in mind that test.o requires the println system call to be 0 and normal print has to be 1.
 ### Run the code!
 Now that we're all sorted, we just need to create an instance of the TaskManager that I will call testManager
-```
+```C#
 TaskManager testManager = new TaskManager();
 ```
 At this point we can load the code
-```
+```C#
 testManager.Start(test_exec);
 ```
 Now let's start the task manager!
-```
+```C#
 testManager.StartExecution();
 ```
 ## Important notes
