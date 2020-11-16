@@ -28,9 +28,9 @@ in which resource_bytes is:
 To add the system calls that you implemented, just use the function ```test_exec.AddSysCall(name_of_the_function, syscall_number);```.
 Please keep in mind that test.o requires the println system call to be 0 and normal print has to be 1.
 ### Run the code!
-Now that we're all sorted, we just need to create an instance of the TaskManager that I will call testManager
+Now that we're all sorted, we just need to create an instance of the TasksManager that I will call testManager
 ```C#
-TaskManager testManager = new TaskManager();
+TasksManager testManager = new TasksManager();
 ```
 At this point we can load the code
 ```C#
