@@ -3,6 +3,8 @@
 Well, MSE is a method that allows anybody to load external code from CosmosOS!
 ## How do i do that?
 To get this working it's actually pretty simple:
+### Install the package
+Right click on your solution > Manage NuGET packages, then go to "Browse" and search ManagedSoftwareExecution, then install the package with the CosmosOS icon.
 ### Include the namespace
 `using Cosmos.System.Emulation` should do the job ;)
 ### Choose an executable
