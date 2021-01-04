@@ -1,8 +1,0 @@
-D:\VSProjects\Cosmos\CosmosDev\ManagedSoftwareImplementation\bin\Debug\netcoreapp2.0\cosmos\ManagedSoftwareImplementation.deps.json
-D:\VSProjects\Cosmos\CosmosDev\ManagedSoftwareImplementation\bin\Debug\netcoreapp2.0\cosmos\ManagedSoftwareImplementation.dll
-D:\VSProjects\Cosmos\CosmosDev\ManagedSoftwareImplementation\bin\Debug\netcoreapp2.0\cosmos\ManagedSoftwareImplementation.pdb
-D:\VSProjects\Cosmos\CosmosDev\ManagedSoftwareImplementation\obj\Debug\netcoreapp2.0\cosmos\ManagedSoftwareImplementation.csprojAssemblyReference.cache
-D:\VSProjects\Cosmos\CosmosDev\ManagedSoftwareImplementation\obj\Debug\netcoreapp2.0\cosmos\ManagedSoftwareImplementation.AssemblyInfoInputs.cache
-D:\VSProjects\Cosmos\CosmosDev\ManagedSoftwareImplementation\obj\Debug\netcoreapp2.0\cosmos\ManagedSoftwareImplementation.AssemblyInfo.cs
-D:\VSProjects\Cosmos\CosmosDev\ManagedSoftwareImplementation\obj\Debug\netcoreapp2.0\cosmos\ManagedSoftwareImplementation.dll
-D:\VSProjects\Cosmos\CosmosDev\ManagedSoftwareImplementation\obj\Debug\netcoreapp2.0\cosmos\ManagedSoftwareImplementation.pdb
