@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>com.Nik300.ManagedSoftwareExecution</id>
+    <version>1.0.0</version>
+    <authors>Nicola Leone Ciardi</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="file">License.md</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <projectUrl>https://github.com/Nik300/ManagedSoftwareExecutionCosmos</projectUrl>
+    <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl>
+    <description>This package has been made to help people using CosmosOS project to execute external code.
+
+You are welcome to redistribute/modify the code of this project.</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright (C) 2020-2021  Nicola Leone Ciardi</copyright>
+    <tags>ManagedSoftwareExecution, CosmosOS</tags>
+    <repository type="GitHub Repo" url="https://github.com/Nik300/ManagedSoftwareExecutionCosmos" />
+  </metadata>
+  <files>
+    <file src="C:\Users\nicol\source\repos\MSE\MSE.Package\bin\Debug\netstandard2.0\MSE.dll" target="analyzers\dotnet\cs\MSE.dll" />
+    <file src="C:\Users\nicol\source\repos\MSE\MSE.Package\bin\Debug\netstandard2.0\MSE.CodeFixes.dll" target="analyzers\dotnet\cs\MSE.CodeFixes.dll" />
+    <file src="C:\Users\nicol\source\repos\MSE\MSE.Package\tools\install.ps1" target="tools\install.ps1" />
+    <file src="C:\Users\nicol\source\repos\MSE\MSE.Package\tools\uninstall.ps1" target="tools\uninstall.ps1" />
+    <file src="C:\Users\nicol\source\repos\MSE\MSE.Package\License.md" target="License.md" />
+  </files>
+</package>

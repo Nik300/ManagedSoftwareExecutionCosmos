@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>com.Nik300.ManagedSoftwareExecution</PackageId>
+    <PackageVersion>1.0.0.0</PackageVersion>
+    <Authors>Nicola Leone Ciardi</Authors>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Nik300/ManagedSoftwareExecutionCosmos</PackageProjectUrl>
+    <PackageIconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Nik300/ManagedSoftwareExecutionCosmos</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>This package has been made to help people using CosmosOS project to execute external code.
+
+You are welcome to redistribute/modify the code of this project.</Description>
+    <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
+    <Copyright>Copyright (C) 2020-2021  Nicola Leone Ciardi</Copyright>
+    <PackageTags>ManagedSoftwareExecution, CosmosOS</PackageTags>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
+
+    <AssemblyName>ManagedSoftwareExecution</AssemblyName>
+
+    <RootNamespace>Cosmos.System.Emulation</RootNamespace>
+
+    <Version>2.0</Version>
+
+    <RepositoryType>GitHub Repo</RepositoryType>
+
+    <FileVersion>2.0.1.1</FileVersion>
+
+    <AssemblyVersion>2.0.10.0</AssemblyVersion>
+
+    <PackageLicenseFile>License.md</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
+    <None Include="License.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <Target Name="_AddAnalyzersToOutput">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(OutputPath)\MSE.dll" PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\MSE.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+    </ItemGroup>
+  </Target>
+
+</Project>
