@@ -21,24 +21,24 @@ FGMSECInstructionSet.Install();
 in the 'BeforeRun' method in your code
 ### Run the executable
 Now we just need to load the executable into an instance
-```
+```C#
 FGMSECInstructionSet set = new FGMSECInstructionSet();
 Executable exec;
 exec = new Executable(resource_data, set, 3);
 ```
 in which 'resource_data' is
-```
+```C#
 [ManifestResourceStream(ResourceName = "project_name.path.to.executable.extension")] static byte[] resource_data;
 ```
 now we siply load the executable data with `exec.ReadData();` and we run it by adding an infinite loop that executes its next instruction:
-```
+```C#
 while (exec.running)
    exec.NextInstruction();
 ```
 As you may notice, we are not in an actual 'endless' loop, but as soon as the program stops, it gives us back the control. This can be useful for the future (e.g. adding a TaskManager which is almos done, this means that MSE has multithreading :D)
 ## System Calls
 Actually, running an executable as i did before, won't do much... this is because we didn't add any of the necessary Systemcalls that the executable requires. These are the basic systemcalls that ALL my test programs use:
-```
+```C#
 exec.AddSystemCall((Executable caller) =>
 {
   int addr = (int)((FGMSECInstructionSet)caller.usingInstructionSet).CPU.GetRegData(3);
