@@ -15,7 +15,7 @@ Note that these programs need to have special systemcalls (such as systemcall 0,
 ### Install the instruction set
 By now the only available instruction set for MSE, is the one that I myself created: the FGMSEC Instruction Set. Don't ask me where that name came from because I don't know myself XD.
 Anyhow to install it just do
-`C#
+`
 FGMSECInstructionSet.Install();
 `
 in the 'BeforeRun' method in your code
