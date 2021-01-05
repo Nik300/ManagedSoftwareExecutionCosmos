@@ -82,6 +82,6 @@ I can't wait to see what kind of weird stuff you come up with it!
 And PLEASE feedback everything!
 If you're enjoying FEEDBACK or if you're hating it feedback it too giving reasons!
 ## Projects using MSE
-If you didn't understand a word of what i said... well I can't blame you! Give a look at my OS which uses MSE (look expecially at function 'ConstructExecutable' and the last part of 'RunCommand'
+If you didn't understand a word of what i said... well I can't blame you! Give a look at [my OS](https://github.com/Nik300/TestEnvOS) which uses MSE (look expecially at function 'ConstructExecutable' and the last part of 'RunCommand'
 
 Enjoy your code!
