@@ -76,12 +76,12 @@ exec.AddSystemCall((Executable caller) =>
 });
 ```
 You can simply copy-paste those and run one of my test programs.
-##Conclusion
+## Conclusion
 MSE is a very powerful tool, and if you know how to use it, you can do very cool stuff with it!
 I can't wait to see what kind of weird stuff you come up with it!
 And PLEASE feedback everything!
 If you're enjoying FEEDBACK or if you're hating it feedback it too giving reasons!
-##Projects using MSE
+## Projects using MSE
 If you didn't understand a word of what i said... well I can't blame you! Give a look at my OS which uses MSE (look expecially at function 'ConstructExecutable' and the last part of 'RunCommand'
 
 Enjoy your code!
