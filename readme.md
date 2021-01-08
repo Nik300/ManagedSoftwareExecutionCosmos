@@ -32,7 +32,7 @@ in which 'resource_data' is
 ```C#
 [ManifestResourceStream(ResourceName = "project_name.path.to.executable.extension")] static byte[] resource_data;
 ```
-now we siply load the executable data with `exec.ReadData();` and we run it by adding an infinite loop that executes its next instruction:
+now we simply load the executable data with `exec.ReadData();` and we run it by adding an infinite loop that executes its next instruction:
 ```C#
 while (exec.running)
    exec.NextInstruction();
